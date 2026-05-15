@@ -1,0 +1,28 @@
+name: nodejs-feature-branch-workflow
+on: 
+  # some one should call this
+  workflow_call:
+    inputs:
+      project:
+        description: 'Project name'
+        required: true
+        type: string
+      component:
+        description: 'Component name'
+        required: true
+        type: string
+      environment:
+        description: 'Env name'
+        required: true
+        type: string
+
+jobs:
+  # Job name
+  trigger:
+    runs-on: ubuntu-latest # Github hosted runners
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v6
+
+      - name: list the files
+        run: ls -la
