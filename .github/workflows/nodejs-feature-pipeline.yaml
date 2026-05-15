@@ -19,7 +19,7 @@ on:
 jobs:
   # Job name
   trigger:
-    runs-on: ubuntu-latest # Github hosted runners
+    runs-on: self-hosted
     steps:
       - name: checkout code
         uses: actions/checkout@v6
