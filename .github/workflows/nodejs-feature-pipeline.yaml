@@ -19,7 +19,9 @@ env:
 jobs:
   # Job name
   start:
-    runs-on: self-hosted # Github hosted runners
+    runs-on: self-hosted
+    outputs:
+      app_version: ${{ steps.package_version.outputs.app_version }}
     steps:
       - name: checkout code
         uses: actions/checkout@v6
@@ -28,13 +30,14 @@ jobs:
         id: package_version
         run: |
           APP_VERSION=$(jq -r .version package.json)
-          echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
+          echo "APP_VERSION=$APP_VERSION" >> $$GITHUB_OUTPUT
 
       - name: check app version
         run: echo "$APP_VERSION"
 
   unit-tests:
     runs-on: self-hosted
+    needs: start
     steps:
       - name: install dependencies
         run: npm install
@@ -77,6 +80,7 @@ jobs:
       #     description: SonarQube quality gate ${{ steps.sonar_gate.outcome }}
   lib-scans:
     runs-on: self-hosted
+    needs: unit-tests
     steps:
       - name: Check Dependabot Alerts
         id: library_scan
@@ -112,6 +116,8 @@ jobs:
   docker-build:
     runs-on: self-hosted
     needs: aws-config
+    env:
+      APP_VERSION: ${{ needs.package_version.outputs.app_version }}
     steps:
       - name: build image
         id: build_image
