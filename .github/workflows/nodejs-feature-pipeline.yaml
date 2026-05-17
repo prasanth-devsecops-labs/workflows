@@ -131,7 +131,7 @@ jobs:
   
   docker-scan:
     runs-on: self-hosted
-    needs: docker-build
+    needs: [docker-build, start]
     env:
       APP_VERSION: ${{ needs.start.outputs.app_version }}
     steps:
