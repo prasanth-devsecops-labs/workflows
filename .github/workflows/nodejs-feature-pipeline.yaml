@@ -135,7 +135,8 @@ jobs:
     env:
       APP_VERSION: ${{ needs.start.outputs.app_version }}
     steps:
-
+      - uses: actions/checkout@v4
+  
       - name: debug version
         run: echo "APP_VERSION=$APP_VERSION"
 
@@ -160,8 +161,15 @@ jobs:
 
   ecr-push:
     runs-on: self-hosted
-    needs: docker-scan
+    needs: [docker-scan, start]
+    env:
+      APP_VERSION: ${{ needs.start.outputs.app_version }}
     steps:
+      - uses: actions/checkout@v4
+
+      - name: debug version
+        run: echo "APP_VERSION=$APP_VERSION"
+  
       - name: push image
         id: push_image
         run: |
