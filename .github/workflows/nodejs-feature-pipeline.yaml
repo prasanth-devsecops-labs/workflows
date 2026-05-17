@@ -132,7 +132,13 @@ jobs:
   docker-scan:
     runs-on: self-hosted
     needs: docker-build
+    env:
+      APP_VERSION: ${{ needs.start.outputs.app_version }}
     steps:
+
+      - name: debug version
+        run: echo "APP_VERSION=$APP_VERSION"
+
       - name: trivy scan
         id: trivy_scan
         uses: aquasecurity/trivy-action@v0.36.0
