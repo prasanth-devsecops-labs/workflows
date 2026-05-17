@@ -115,7 +115,7 @@ jobs:
 
   docker-build:
     runs-on: self-hosted
-    needs: aws-config
+    needs: [aws-config, start]
     env:
       APP_VERSION: ${{ needs.package_version.outputs.app_version }}
     steps:
