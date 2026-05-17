@@ -30,7 +30,7 @@ jobs:
         id: package_version
         run: |
           APP_VERSION=$(jq -r .version package.json)
-          echo "APP_VERSION=$APP_VERSION" >> $$GITHUB_OUTPUT
+          echo "APP_VERSION=$APP_VERSION" >> $GITHUB_OUTPUT
 
       - name: check app version
         run: echo "$APP_VERSION"
@@ -117,8 +117,13 @@ jobs:
     runs-on: self-hosted
     needs: [aws-config, start]
     env:
-      APP_VERSION: ${{ needs.package_version.outputs.app_version }}
+      APP_VERSION: ${{ needs.start.outputs.app_version }}
     steps:
+      - uses: actions/checkout@v4
+
+      - name: debug version
+        run: echo "APP_VERSION=$APP_VERSION"
+
       - name: build image
         id: build_image
         run: |
